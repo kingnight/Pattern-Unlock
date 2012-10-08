@@ -26,7 +26,8 @@ var patternlock={
 			 }
 		  }
 		}
-	} ,
+		setPattern();
+	},
 
 	generate:function(el){
 		this.inputbox = el;
@@ -231,8 +232,8 @@ var patternlock={
 }
 
 
-patternlock.attach(window, function(){patternlock.init()}, "load") ;
-patternlock.attach(document, function(){patternlock.buttontouchend()}, "mouseup") ;
+patternlock.attach(window, function(){patternlock.init()}, "load");
+patternlock.attach(document, function(){patternlock.buttontouchend()}, "mouseup");
 
 			
 // one helper function to find the absolute position of an element			
@@ -248,34 +249,18 @@ function findPos(obj) {
 }
 
 var pattrn = "";
+var pttrn = "";
 var unlockPattrn = "";
 
 function setPattern(){
-	pttrn = document.getElementById("password").value;
-	if(pttrn==""){
-		document.getElementById("message").textContent = "Empty Pattern not Allowed! Set it Again";		
-		alert("Please Draw a Pattern!")
-		document.getElementById("password").value = "";
-	}
-	else{
-		document.getElementById("password").value = "";
-		//alert(pttrn);
-		//document.forms[0].submit();
-		document.getElementsByClassName("")
-		document.getElementById("setButton").style.visibility = "hidden";
-		document.getElementById("checkButton").style.visibility = "visible";
-		document.getElementById("message").innerHTML = "<h3>Draw a matching pattern to unlock it</h3>";	
-	}
-	resetButtons();
-	return true;
+	pttrn = "4268"
+	console.log('the pattern is ' + pttrn);
 }
 
 function checkPattern(){
 	unlockPattrn = document.getElementById("password").value;
-	//alert(pttrn+"    "+unlockPattrn);
 	if(pttrn==unlockPattrn&&pttrn!=""){
-		document.getElementById("message").textContent = "Login SuccessFul";
-		document.getElementById("content").innerHTML = "<img src='img/select.png'/><br><br><h3>Reload the Page to Set a different Pattern</h3>";
+		window.location = 'http://www.google.com';
 	}
 	else{
 		document.getElementById("message").textContent = "Pattern Mismatch! Try Again";	

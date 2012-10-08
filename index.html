@@ -26,25 +26,11 @@ body{
 				</tr>
 				<tr>
 					<td>
-						<input style="display:none;" type="password" id="password" name="password" class="patternlock" />
+						<input type="text" id="password" name="password" class="patternlock" />
 						<input type="submit" value="login"/>
-						<input id="setButton" type="button" value="Set Pattern" onClick = "setPattern();">
-						<input id="checkButton" style="visibility:hidden;" type="button" value="Unlock Pattern" onClick = "checkPattern();">
+						<input id="checkButton" type="button" value="Unlock Pattern" onClick = "checkPattern();">
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<div id="inputMsg" style="text-align:justify;">
-								<ol>
-									<li>Create an Unlock pattern on the grid</li>
-									<li>Once the pattern is drawn, click on "Set Pattern"</li>
-									<li>Now it's time to Unlock, you have to enter the same pattern to unlock it</li>
-									<li>Upon successfully matching the pattern, you see a green tick mark</li>
-									<li>If you want to do this again, relaod the page</li>
-								</ol>
-						</div>
-					</td>
-				</tr>	
 			</table>
 		</div>
 	</form>
