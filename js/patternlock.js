@@ -260,31 +260,27 @@ function setPattern(){
 
 function checkPattern(){
 	unlockPattrn = document.getElementById("password").value;
-	if(pttrn == unlockPattrn && pttrn != ""){
+	if (pttrn == unlockPattrn && pttrn != "") {
 		window.location = 'http://www.google.com';
-	}
-	else{
-		document.getElementById("message").textContent = "Pattern Mismatch! Try Again";	
-		//document.forms[0].submit();
+	} else {
 		resetButtons();
 		unlockPattrn = "";
 		document.getElementById("password").value = "";
-	}	
+	}
 }
 
 var resetButtons = function(){
-		//Resetting the Pattern
-		for(var i=0;i<document.getElementsByClassName("patternlocklinehorizontal").length;i++){
-			document.getElementsByClassName("patternlocklinehorizontal")[i].style.visibility="hidden"
+		for (var i=0; i<document.getElementsByClassName("patternlocklinehorizontal").length; i++) {
+			document.getElementsByClassName("patternlocklinehorizontal")[i].style.visibility="hidden";
 		}
-		for(var i=0;i<document.getElementsByClassName("patternlocklinevertical").length;i++){
-			document.getElementsByClassName("patternlocklinevertical")[i].style.visibility="hidden"
+		for (var i=0; i<document.getElementsByClassName("patternlocklinevertical").length; i++) {
+			document.getElementsByClassName("patternlocklinevertical")[i].style.visibility="hidden";
 		}
-		for(var i=0;i<document.getElementsByClassName("patternlocklinediagonalforward").length;i++){
-			document.getElementsByClassName("patternlocklinediagonalforward")[i].style.visibility="hidden"
+		for (var i=0; i<document.getElementsByClassName("patternlocklinediagonalforward").length; i++) {
+			document.getElementsByClassName("patternlocklinediagonalforward")[i].style.visibility="hidden";
 		}
-		for(var i=0;i<document.getElementsByClassName("patternlocklinediagonalbackwards").length;i++){
-			document.getElementsByClassName("patternlocklinediagonalbackwards")[i].style.visibility="hidden"
+		for (var i=0; i<document.getElementsByClassName("patternlocklinediagonalbackwards").length; i++) {
+			document.getElementsByClassName("patternlocklinediagonalbackwards")[i].style.visibility="hidden";
 		}
 		document.getElementById("patternlockbutton1").className = "patternlockbutton";
 		document.getElementById("patternlockbutton2").className = "patternlockbutton";
