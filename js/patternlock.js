@@ -212,6 +212,7 @@ var patternlock={
 		patternlock.isdrawing = false;
 		if (this.autoSubmit){
 			var dosubmit = true;
+			checkPattern();
 			//if (document.forms[0].onsubmit){ dosubmit = document.forms[0].onsubmit() }
 			//if(dosubmit){
 				
@@ -259,7 +260,7 @@ function setPattern(){
 
 function checkPattern(){
 	unlockPattrn = document.getElementById("password").value;
-	if(pttrn==unlockPattrn&&pttrn!=""){
+	if(pttrn == unlockPattrn && pttrn != ""){
 		window.location = 'http://www.google.com';
 	}
 	else{
