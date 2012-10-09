@@ -1,7 +1,6 @@
 I've gotten rid of the game functionality and have reorganized the original author's code into a functional lock screen for a web app.
 
 
-
 vamshi4001's original readme:
 
 =====================================================================================================================

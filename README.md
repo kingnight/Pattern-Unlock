@@ -1,15 +1,10 @@
-As you might be aware that it's a pretty popular feature on Android devices to have a pattern lock. You can set a pattern lock for your device which gets unlocked only by matching it again. I've tried to replicate the same for the web, so that we can have fun for some time. This can as well be used to authenticate your website users as it's a all a number game behind the scenes.
+This is a pattern unlock screen, similar to the one on Android.  
 
-Will be updating it to make a full fledged challenging social game going forward.
+Based on vamshi4001's code (https://github.com/vamshi4001/Android-Unlock-4-Web) which has most of the code in place to get the lock screen working, I've made a couple changes here so that it behaves much more like the lock screen.
 
-As of now, you can do following tasks
-=====================================
-Create an Unlock pattern on the grid
+The pegs on the screen represent numbers, like those on a phone.  ex:
+1 2 3
+4 5 6
+7 8 9
 
-Once the pattern is drawn, click on "Set Pattern"
-
-Now it's time to Unlock, you have to enter the same pattern to unlock it
-
-Upon successfully matching the pattern, you see a green tick mark
-
-If you want to do this again, relaod the page
+The current password is '123'.  The password can be found on line 257 of patternlock.js.
