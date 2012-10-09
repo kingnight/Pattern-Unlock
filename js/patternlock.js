@@ -254,7 +254,7 @@ var pttrn = "";
 var unlockPattrn = "";
 
 function setPattern(){
-	pttrn = "4268"
+	pttrn = "4268";
 	console.log('the pattern is ' + pttrn);
 }
 
