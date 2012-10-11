@@ -1,3 +1,5 @@
+body { text-align: center; font-family: Arial, Helvetica, sans-serif; }
+
 .patternlockcontainer{ width: 260px; margin: auto; height: 260px; overflow: hidden; }
 .patternlockbuttoncontainer { position: absolute; width: 300px; }
 .patternlocklineshorizontalcontainer { padding: 22px; position: absolute; width: 250px; }
