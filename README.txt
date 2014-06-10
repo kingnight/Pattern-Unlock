@@ -1,3 +1,29 @@
+change:
+
+1)add two times check to make sure set pattern success
+
+2)modify API 
+
+**init code:**
+    
+    lock.init(parent id, callback);
+    
+ after init callback functuion will run   
+    
+**set pattern **
+
+	lock.setPattern(succCallback,failCallback);
+	
+if the setting pattern of two times has the same code, run succCallback, then run failCallback  
+	
+**unlock pattern**
+
+	lock.lockPattern(callback);
+
+unlock success , run callback
+
+
+
 I've gotten rid of the game functionality and have reorganized the original author's code into a functional lock screen for a web app.
 
 
