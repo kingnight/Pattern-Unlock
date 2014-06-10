@@ -6,7 +6,18 @@ var lock = function(){
 	var _setPatternSuccCb;
     var _setPatternFailCb;
     var _checkPatternCb;
-	
+
+    //add tips
+	var tips={
+        setLockPattern:"Create Unlock pattern on the grid",
+        repeatSet:"Repeat the Same Unlock pattern",
+        createSucc:"Create Unlock pattern Success",
+        createFail:"Create Unlock pattern Fail, Two times Pattern are not same, Try Again",
+        unLockPattern:"Now it's time to Unlock, you have to enter the same pattern to unlock it",
+        unLockPatternSuc:"Unlock pattern Success",
+        unLockPatternFail:"Unlock pattern Fail,Try Again"
+    };
+
 	// =================================================
 	// = public functions                              =
 	// =================================================
@@ -22,7 +33,7 @@ var lock = function(){
 		unlockPattern: '',//saved pattern lock code
 		isSetLock:false,  //set lock or unlock
         time:0,//need 2 times same check
-			
+
 		/*init: function(setPassword, parentElement, callback){
 			patternlock.unlockPattern = setPassword;
 			_setPatternCallback = callback;
@@ -43,7 +54,7 @@ var lock = function(){
 		},
 	
 		generate: function(parentElement){
-			var $form = '<form method="post" id="lock_container"><input type="text" id="patternlockpwd" name="password" class="patternlock" /><input type="text" id="repeatpwd" name="password" class="patternlock" /></form>';
+			var $form = '<h4 id="patternlocktips"></h4><form method="post" id="lock_container"><input type="text" id="patternlockpwd" name="password" class="patternlock" /><input type="text" id="repeatpwd" name="password" class="patternlock" /></form>';
 			$(parentElement).append($form);
 			var el = document.getElementById('patternlockpwd');
 			this.inputbox = el;
@@ -163,6 +174,10 @@ var lock = function(){
             patternlock.repeatInputbox.value="";
         },
 
+        setTips:function(e){
+            $("#patternlocktips").html(e);
+        },
+
 		buttontouchstart:function(b){
 			patternlock.isdrawing = true;
 			b.className = "patternlockbutton touched";
@@ -247,16 +262,21 @@ var lock = function(){
                     _resetButtons();
                     if(_checkPattern()){
                         console.log("lock success");
+                        patternlock.setTips(tips.unLockPatternSuc);
                         patternlock.clearInputBox();
                         _checkPatternCb();
                     }
-
+                    else{
+                        patternlock.setTips(tips.unLockPatternFail);
+                        patternlock.clearInputBox();
+                    }
 				}
 				else if(patternlock.isSetLock){ //set pattern
                     if(patternlock.time<1){ //first time set
                         patternlock.time++;
                         console.log("first");
                         _resetButtons();
+                        patternlock.setTips(tips.repeatSet);
                     }
                     else{
                         patternlock.isSetLock=false;
@@ -269,6 +289,7 @@ var lock = function(){
                             _resetButtons();
                             patternlock.clearInputBox();
                             _setPatternSuccCb(); //call success callback
+                            patternlock.setTips(tips.createSucc);
                         }
                         else{ //reset pattern lock, counter clear
                             patternlock.isSetLock=true;
@@ -276,6 +297,7 @@ var lock = function(){
                             _resetButtons();
                             patternlock.clearInputBox();
                             _setPatternFailCb();
+                            patternlock.setTips(tips.createFail);
                         }
                     }
 
@@ -298,6 +320,7 @@ var lock = function(){
             //console.log(typeof(callback));
             typeof(succCallback)==="function"? _setPatternSuccCb=succCallback : _setPatternSuccCb=function(){console.log("error");};
             typeof(failCallback)==="function"? _setPatternFailCb=failCallback : _setPatternFailCb=function(){console.log("error");};
+            patternlock.setTips(tips.setLockPattern);
         },
 
         lockPattern:function(callback){
@@ -305,6 +328,8 @@ var lock = function(){
             //console.log(typeof(callback));
             if(typeof(callback)==="function")
                 _checkPatternCb=callback;
+
+            patternlock.setTips(tips.unLockPattern);
         }
 
 	};
