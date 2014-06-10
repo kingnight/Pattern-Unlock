@@ -10,13 +10,13 @@
     
  after init callback functuion will run   
     
-**set pattern **
+**set pattern:**
 
 	lock.setPattern(succCallback,failCallback);
 	
 if the setting pattern of two times has the same code, run succCallback, then run failCallback  
 	
-**unlock pattern**
+**unlock pattern:**
 
 	lock.lockPattern(callback);
 
