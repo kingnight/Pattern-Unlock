@@ -11,31 +11,25 @@
 	</head>
 	<body>
 
-        <h3 id="header">手势解锁</h3>
-        <h4 id="info"></h4>
-
+        <h3 id="header">Pattern Lock</h3>
 
 		<div id="content">
 		</div>
 		<script>
-        var text=["创建解锁手势","再次确认解锁手势","3秒后解锁","解锁成功"];
 
 		lock.init('#content',function(){
             console.log("init success");
-            $("#info").html(text[0]);
         });
 
         var succCallback=function(){
             console.log("pattern set success callback");
 
-            $("#info").html(text[2]);
             setTimeout(function(){
-                console.log("after 3s times change to unlock");
+                console.log("after 1s times change to unlock");
                 lock.lockPattern(function(){
                     console.log("unlock success");
-                    $("#info").html(text[3]);
                 });
-            },3000);
+            },1000);
         };
 
         var failCallback=function(){
