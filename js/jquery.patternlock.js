@@ -2,8 +2,10 @@ var lock = function(){
 	// =================================================
 	// = Private variables (example: var _foo = bar; ) =
 	// =================================================
-	
-	var _successCallback;
+
+	var _setPatternSuccCb;
+    var _setPatternFailCb;
+    var _checkPatternCb;
 	
 	// =================================================
 	// = public functions                              =
@@ -14,22 +16,43 @@ var lock = function(){
 		isdrawing: false,
 		from: "",
 		to: "",
-		inputbox: "",
+		inputbox: "",//first time set lock code saved
+		repeatInputbox:"",//second time set lock code saved
 		startbutton: 0,
-		unlockPattern: '',
+		unlockPattern: '',//saved pattern lock code
+		isSetLock:false,  //set lock or unlock
+        time:0,//need 2 times same check
 			
-		init: function(setPassword, parentElement, callback){
+		/*init: function(setPassword, parentElement, callback){
 			patternlock.unlockPattern = setPassword;
-			_successCallback = callback;
+			_setPatternCallback = callback;
 			patternlock.generate(parentElement);
-		},
+		},*/
+		
+	    init: function(parentElement,callback){
+			//patternlock.unlockPattern = setPassword;
+			//_setPatternCallback = callback;
+			patternlock.generate(parentElement);
 
+            $(parentElement).on('mouseup', function() {
+                patternlock.buttontouchend();
+            });
+
+            if(typeof callback==='function')
+                callback();
+		},
+	
 		generate: function(parentElement){
-			var $form = '<form method="post" id="lock_container"><input type="text" id="password" name="password" class="patternlock" /></form>';
+			var $form = '<form method="post" id="lock_container"><input type="text" id="patternlockpwd" name="password" class="patternlock" /><input type="text" id="repeatpwd" name="password" class="patternlock" /></form>';
 			$(parentElement).append($form);
-			var el = document.getElementById('password');
+			var el = document.getElementById('patternlockpwd');
 			this.inputbox = el;
-			el.style.display = 'none';
+            el.style.display = 'none';
+
+            var repeatel = document.getElementById('repeatpwd');
+			this.repeatInputbox = repeatel;
+            repeatel.style.display = 'none';
+
 			var pel = el.parentNode;
 			
 			// main container
@@ -126,12 +149,28 @@ var lock = function(){
 		    pel.appendChild(patternTag);
 		},
 
+        setInputBoxValue:function(val){
+            if(patternlock.isSetLock && patternlock.time==0)
+                patternlock.inputbox.value += val;
+            else if(patternlock.isSetLock && patternlock.time==1)
+                patternlock.repeatInputbox.value += val;
+            else
+                patternlock.inputbox.value += val;
+        },
+
+        clearInputBox:function(){
+            patternlock.inputbox.value="";
+            patternlock.repeatInputbox.value="";
+        },
+
 		buttontouchstart:function(b){
 			patternlock.isdrawing = true;
 			b.className = "patternlockbutton touched";
 			patternlock.from = "";
 			patternlock.to = b.id.split("patternlockbutton").join("");
-			this.inputbox.value = patternlock.to;
+
+            patternlock.setInputBoxValue(patternlock.to);
+
 			this.startbutton = patternlock.to;
 			return false;
 		},
@@ -153,8 +192,9 @@ var lock = function(){
 					patternlock.to = thisbutton;
 					
 					//update input value
-					this.inputbox.value += patternlock.to;
-					
+					//this.inputbox.value += patternlock.to;
+                    patternlock.setInputBoxValue(patternlock.to);
+
 					// display line between 2 buttons 
 					var thisline = document.getElementById("line" + patternlock.from + patternlock.to);
 					if (patternlock.to <  patternlock.from){
@@ -203,8 +243,43 @@ var lock = function(){
 		buttontouchend: function(b) {
 			if (patternlock.isdrawing){
 				patternlock.isdrawing = false;
-				if (_checkPattern()) {
-					_successCallback();
+				if (!patternlock.isSetLock) {//unlock pattern
+                    _resetButtons();
+                    if(_checkPattern()){
+                        console.log("lock success");
+                        patternlock.clearInputBox();
+                        _checkPatternCb();
+                    }
+
+				}
+				else if(patternlock.isSetLock){ //set pattern
+                    if(patternlock.time<1){ //first time set
+                        patternlock.time++;
+                        console.log("first");
+                        _resetButtons();
+                    }
+                    else{
+                        patternlock.isSetLock=false;
+                        //compare twice times pattern lock is same?
+                        var ele1=document.getElementById("patternlockpwd");
+                        var ele2=document.getElementById("repeatpwd");
+                        if(ele1.value===ele2.value){ //same
+                            console.log("same");
+                            patternlock.unlockPattern=ele1.value;
+                            _resetButtons();
+                            patternlock.clearInputBox();
+                            _setPatternSuccCb(); //call success callback
+                        }
+                        else{ //reset pattern lock, counter clear
+                            patternlock.isSetLock=true;
+                            patternlock.time=0;
+                            _resetButtons();
+                            patternlock.clearInputBox();
+                            _setPatternFailCb();
+                        }
+                    }
+
+
 				}
 			}
 			return(false)		
@@ -216,7 +291,22 @@ var lock = function(){
 				target.addEventListener(tasktype, functionref, false)
 			else if (target.attachEvent)
 				target.attachEvent(tasktype, functionref)
-		}	
+		},
+
+        setPattern:function(succCallback,failCallback){
+            patternlock.isSetLock=true;
+            //console.log(typeof(callback));
+            typeof(succCallback)==="function"? _setPatternSuccCb=succCallback : _setPatternSuccCb=function(){console.log("error");};
+            typeof(failCallback)==="function"? _setPatternFailCb=failCallback : _setPatternFailCb=function(){console.log("error");};
+        },
+
+        lockPattern:function(callback){
+            patternlock.isSetLock=false;
+            //console.log(typeof(callback));
+            if(typeof(callback)==="function")
+                _checkPatternCb=callback;
+        }
+
 	};
 	
 	return patternlock;
@@ -224,47 +314,43 @@ var lock = function(){
 	// ================================================
 	// = Private functionse (function _private() {} ) =
 	// ================================================
-	
+
+    // one helper function to find the absolute position of an element
+    function _findPos(obj) {
+        var curleft = curtop = 0;
+        if (obj.offsetParent) {
+            do {
+                curleft += obj.offsetLeft;
+                curtop += obj.offsetTop;
+            } while (obj = obj.offsetParent);
+            return [curleft,curtop];
+        }
+    }
+
+    function _checkPattern(){
+        var patternAttempt = $("#patternlockpwd").val();
+        console.log("patternAttempt"+patternAttempt);
+        console.log("unlockPattern"+patternlock.unlockPattern);
+        if (patternAttempt === patternlock.unlockPattern) {
+            return true;
+        } else {
+            _resetButtons();
+            patternAttempt = '';
+            $("#patternlockpwd").val = '';
+            return false;
+        }
+    }
+
+    function _resetButtons() {
+        $(".patternlocklinehorizontal").css('visibility', 'hidden');
+        $(".patternlocklinevertical").css('visibility', 'hidden');
+        $(".patternlocklinediagonalforward").css('visibility', 'hidden');
+        $(".patternlocklinediagonalbackwards").css('visibility', 'hidden');
+        $('.patternlockbutton').attr('class', 'patternlockbutton');
+    }
 }();
 
 
-$(window).on('mouseup', function() {
-	lock.buttontouchend();
-});
-
 			
-// one helper function to find the absolute position of an element			
-function _findPos(obj) {
-	var curleft = curtop = 0;
-	if (obj.offsetParent) {
-		do {
-			curleft += obj.offsetLeft;
-			curtop += obj.offsetTop;
-		} while (obj = obj.offsetParent);
-		return [curleft,curtop];
-	}
-}
 
-var patternAttempt = '';
-
-
-function _checkPattern(){
-	patternAttempt = $("#password").val();
-	if (patternAttempt === lock.unlockPattern) {
-		return true;
-	} else {
-		_resetButtons();
-		patternAttempt = '';
-		$("#password").val = '';
-		return false;
-	}
-}
-
-function _resetButtons() {
-	$(".patternlocklinehorizontal").css('visibility', 'hidden');
-	$(".patternlocklinevertical").css('visibility', 'hidden');
-	$(".patternlocklinediagonalforward").css('visibility', 'hidden');
-	$(".patternlocklinediagonalbackwards").css('visibility', 'hidden');	
-	$('.patternlockbutton').attr('class', 'patternlockbutton');
-}
 
