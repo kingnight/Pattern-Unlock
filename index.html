@@ -13,30 +13,55 @@
 
         <h3 id="header">Pattern Lock</h3>
 
+
 		<div id="content">
 		</div>
 		<script>
 
-		lock.init('#content',function(){
-            console.log("init success");
-        });
-
+        //设置密码成功回调函数
         var succCallback=function(){
             console.log("pattern set success callback");
-
+            //1秒钟后切换到解锁模式
             setTimeout(function(){
                 console.log("after 1s times change to unlock");
+                //解锁
                 lock.lockPattern(function(){
+                    //解锁成功回调函数
                     console.log("unlock success");
                 });
             },1000);
         };
-
+        //设置密码失败回调函数
         var failCallback=function(){
             console.log("pattern set fail");
         }
 
-        lock.setPattern(succCallback,failCallback);
+        //初始化,绑定对象
+        lock.init('#content',function(){
+            console.log("init success");
+
+            if (lock.isSetLock == true) //已经设置过密码，进入解锁流程
+            {
+                //1秒钟后切换到解锁模式
+                setTimeout(function(){
+                    console.log("after 1s times change to unlock");
+                    //解锁
+                    lock.lockPattern(function(){
+                        //解锁成功回调函数
+                        console.log("unlock success");
+                    },function(){
+                        //解锁失败
+                        alert("解锁失败，密码输入错误！");
+                    });
+                },1000);
+            }
+            else {
+                // 未设置过密码
+                // 设置解锁密码
+                lock.setPattern(succCallback,failCallback);
+            }
+
+        });
 
 </script>
 	</body>
