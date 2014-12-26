@@ -1,3 +1,39 @@
+#手势解锁
+
+
+
+![image](./patternlock.gif)
+---
+##API
+###lock.init(parent id, callback,langType);
+初始化
+
+parent id: 绑定DOM元素    
+    
+callback:初始化成功回调函数 
+ 
+langType:提示信息语言设置（默认中文），可设置“cn”或“en”
+
+### lock.setPattern(succCallback,failCallback);
+设置锁
+succCallback：成功回调函数
+failCallback：失败回调函数
+
+### lock.setPattern(succCallback,failCallback);
+解锁
+
+succCallback：成功回调函数
+failCallback：失败回调函数
+
+##Attribute 
+
+###lock.isSetLock 
+判断是否已设置锁
+
+
+---
+
+
 ## change:
 
 1)add two times check to make sure set pattern success
@@ -6,9 +42,13 @@
 
 **init code:**
     
-    lock.init(parent id, callback);
+    lock.init(parent id, callback,langType);
     
- after init callback functuion will run   
+parent id: bind to DOM , generate lock pattern    
+    
+callback:after init callback functuion will run  
+ 
+langType:default is chinese (cn / en)
     
 **set pattern:**
 
@@ -18,9 +58,13 @@ if the setting pattern of two times has the same code, run succCallback, then ru
 	
 **unlock pattern:**
 
-	lock.lockPattern(callback);
+	lock.lockPattern(succCallback,failCallback);
 
-unlock success , run callback
+unlock success , run succCallback, fail run failCallback
+
+
+
+---
 
 ## original README
 
