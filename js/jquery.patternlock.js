@@ -30,6 +30,8 @@ var lock = function () {
         unLockPatternFail: "手势解锁失败,请重试"
     };
 
+    var setLocalStorage = false;
+
     // =================================================
     // = public functions                              =
     // =================================================
@@ -55,11 +57,13 @@ var lock = function () {
 
             patternlock.generate(parentElement);
 
-            var  pattern=patternlock.getlockPattern();
+            if(setLocalStorage == true) {
+              var  pattern=patternlock.getlockPattern();
 
-            if (pattern && pattern.length>0 ) {
-                patternlock.unlockPattern =pattern;
-                patternlock.isSetLock = true;
+              if (pattern && pattern.length>0 ) {
+                  patternlock.unlockPattern =pattern;
+                  patternlock.isSetLock = true;
+              }
             }
 
             $(parentElement).on('mouseup', function () {
@@ -308,21 +312,22 @@ var lock = function () {
                         var ele1 = document.getElementById("patternlockpwd");
                         var ele2 = document.getElementById("repeatpwd");
                         if (ele1.value === ele2.value) { //same
-                            console.log(ele1.value);
                             patternlock.unlockPattern = ele1.value;
+                            console.log(patternlock.unlockPattern);
                             _resetButtons();
-                            patternlock.savelockPattern(ele1.value);//save to LocalStorage
-                            patternlock.clearInputBox();
-                            _setPatternSuccCb(); //call success callback
+                            if(setLocalStorage == true)
+                              patternlock.savelockPattern(patternlock.unlockPattern);//save to LocalStorage
                             patternlock.setTips(tips.createSucc);
+                            patternlock.clearInputBox();
+                            _setPatternSuccCb(patternlock.unlockPattern); //call success callback with key
                         }
                         else { //reset pattern lock, counter clear
                             patternlock.isSetLock = true;
                             patternlock.time = 0;
                             _resetButtons();
                             patternlock.clearInputBox();
-                            _setPatternFailCb();
                             patternlock.setTips(tips.createFail);
+                            _setPatternFailCb();
                         }
                     }
 
@@ -352,9 +357,10 @@ var lock = function () {
             patternlock.setTips(tips.setLockPattern);
         },
 
-        lockPattern: function (succcallback,failcallback) {
+        lockPattern: function (lockValue,succcallback,failcallback) {
             patternlock.isSetLock = false;
             //console.log(typeof(callback));
+            patternlock.unlockPattern = lockValue;
             if (typeof(succcallback) === "function")
                 _lockPatternSuccCb = succcallback;
             if (typeof(failcallback) === "function")
@@ -370,10 +376,6 @@ var lock = function () {
 
         getlockPattern:function(){
             return localStorage.getItem("$%AisinoLockPattern");
-        },
-
-        isSetLock:function(){
-            return patternlock.isSetLock;
         }
     };
 
@@ -417,8 +419,3 @@ var lock = function () {
         $('.patternlockbutton').attr('class', 'patternlockbutton');
     }
 }();
-
-
-			
-
-

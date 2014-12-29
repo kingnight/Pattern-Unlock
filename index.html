@@ -19,15 +19,19 @@
 		<script>
 
         //设置密码成功回调函数
-        var succCallback=function(){
-            console.log("pattern set success callback");
+        var succCallback=function(lockPattern){
+            console.log("pattern set SUCC:"+lockPattern);
+
             //1秒钟后切换到解锁模式
             setTimeout(function(){
                 console.log("after 1s times change to unlock");
                 //解锁
-                lock.lockPattern(function(){
+                lock.lockPattern("123",function(){
                     //解锁成功回调函数
                     console.log("unlock success");
+                },function(){
+                    //解锁失败
+                    alert("解锁失败，密码输入错误！");
                 });
             },1000);
         };
@@ -39,27 +43,9 @@
         //初始化,绑定对象
         lock.init('#content',function(){
             console.log("init success");
-
-            if (lock.isSetLock == true) //已经设置过密码，进入解锁流程
-            {
-                //1秒钟后切换到解锁模式
-                setTimeout(function(){
-                    console.log("after 1s times change to unlock");
-                    //解锁
-                    lock.lockPattern(function(){
-                        //解锁成功回调函数
-                        console.log("unlock success");
-                    },function(){
-                        //解锁失败
-                        alert("解锁失败，密码输入错误！");
-                    });
-                },1000);
-            }
-            else {
                 // 未设置过密码
                 // 设置解锁密码
                 lock.setPattern(succCallback,failCallback);
-            }
 
         });
 
